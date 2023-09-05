@@ -17,7 +17,7 @@ class App extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(
             seedColor: const Color.fromARGB(255, 111, 190, 255)),
       ),
-      home: Scaffold(),
+      home: LoginScreen(),
     );
   }
 }
