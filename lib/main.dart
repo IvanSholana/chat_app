@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:chat_app/screens/login_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:chat_app/screens/login_screen/main_login.dart';
 
 void main() {
   runApp(const App());
