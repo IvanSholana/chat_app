@@ -16,7 +16,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLogin = !_isLogin;
     });
-    print(_isLogin);
   }
 
   @override

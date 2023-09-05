@@ -1,4 +1,6 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginForm extends StatefulWidget {
   LoginForm({super.key, required this.isLoginCheck, required this.isLogin});
@@ -12,6 +14,39 @@ class LoginForm extends StatefulWidget {
 }
 
 class _LoginFormState extends State<LoginForm> {
+  final formKey = GlobalKey<FormState>();
+  var _password = '';
+  var _email = '';
+  final authFirebase = FirebaseAuth.instance;
+
+  void _submit() async {
+    if (formKey.currentState!.validate()) {
+      formKey.currentState!.save();
+      try {
+        if (widget.isLogin) {
+          final UserCredential = await authFirebase.signInWithEmailAndPassword(
+              email: _email, password: _password);
+        } else {
+          final userCredential =
+              await authFirebase.createUserWithEmailAndPassword(
+                  email: _email, password: _password);
+        }
+      } on FirebaseAuthException catch (error) {
+        if (error.code == 'email-already-in-use') {
+          //..
+        }
+        ScaffoldMessenger.of(context).clearSnackBars();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(error.code ?? 'Authentication Failed'),
+          ),
+        );
+      }
+    } else {
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -24,6 +59,7 @@ class _LoginFormState extends State<LoginForm> {
         ),
       ),
       child: Form(
+        key: formKey,
         child: Column(children: [
           TextFormField(
             keyboardType: TextInputType.emailAddress,
@@ -33,16 +69,38 @@ class _LoginFormState extends State<LoginForm> {
               labelText: "Email",
               prefixIcon: Icon(Icons.email),
             ),
+            validator: (value) {
+              if (value == null ||
+                  value.trim().isEmpty ||
+                  !value.contains('@')) {
+                return 'Invalid Email! Please enter a email address';
+              }
+              return null;
+            },
+            onSaved: (newValue) => _email = newValue!,
           ),
           const SizedBox(
             height: 20,
           ),
           TextFormField(
+            onChanged: (value) => _password = value,
+            maxLength: 20,
             obscureText: true,
             decoration: const InputDecoration(
               labelText: "Password",
               prefixIcon: Icon(Icons.key),
             ),
+            validator: (value) {
+              if (value == null ||
+                  value.trim().isEmpty ||
+                  value.trim().length <= 10) {
+                return 'Password must be at least 10 characters long!';
+              }
+              return null;
+            },
+            onSaved: (newValue) {
+              _password = newValue!;
+            },
           ),
           widget.isLogin
               ? const SizedBox(
@@ -50,23 +108,28 @@ class _LoginFormState extends State<LoginForm> {
                 )
               : Column(
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
                     TextFormField(
                       obscureText: true,
                       decoration: const InputDecoration(
                         labelText: "Confirmation Password",
                         prefixIcon: Icon(Icons.key),
                       ),
+                      validator: (value) {
+                        if (value != _password) {
+                          return 'Password not mathed';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 25,
                     ),
                   ],
                 ),
-          const SizedBox(
-            height: 25,
-          ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              _submit();
+            },
             child: Container(
               padding: const EdgeInsets.all(15),
               width: double.infinity,
