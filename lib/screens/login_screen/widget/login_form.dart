@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 
 class LoginForm extends StatefulWidget {
+  LoginForm({super.key, required this.isLoginCheck, required this.isLogin});
+  void Function() isLoginCheck;
+  bool isLogin;
+
   @override
   State<StatefulWidget> createState() {
     return _LoginFormState();
@@ -11,7 +15,7 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 30),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 30),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
@@ -22,6 +26,9 @@ class _LoginFormState extends State<LoginForm> {
       child: Form(
         child: Column(children: [
           TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            autocorrect: false,
+            textCapitalization: TextCapitalization.none,
             decoration: const InputDecoration(
               labelText: "Email",
               prefixIcon: Icon(Icons.email),
@@ -31,10 +38,30 @@ class _LoginFormState extends State<LoginForm> {
             height: 20,
           ),
           TextFormField(
-              decoration: const InputDecoration(
-            labelText: "Password",
-            prefixIcon: Icon(Icons.key),
-          )),
+            obscureText: true,
+            decoration: const InputDecoration(
+              labelText: "Password",
+              prefixIcon: Icon(Icons.key),
+            ),
+          ),
+          widget.isLogin
+              ? const SizedBox(
+                  height: 25,
+                )
+              : Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    TextFormField(
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: "Confirmation Password",
+                        prefixIcon: Icon(Icons.key),
+                      ),
+                    ),
+                  ],
+                ),
           const SizedBox(
             height: 25,
           ),
@@ -50,7 +77,7 @@ class _LoginFormState extends State<LoginForm> {
                   colors: [Colors.purple, Colors.blueAccent],
                 ),
               ),
-              child: Text("Login",
+              child: Text(widget.isLogin ? "Login" : "Sign Up",
                   style: Theme.of(context)
                       .textTheme
                       .bodyLarge!
@@ -58,12 +85,19 @@ class _LoginFormState extends State<LoginForm> {
             ),
           ),
           const SizedBox(
-            height: 10,
+            height: 5,
           ),
-          const Align(
-            alignment: Alignment.bottomLeft,
-            child: Text(
-              "Dont have account? Register",
+          Align(
+            alignment: Alignment.center,
+            child: TextButton(
+              onPressed: () {
+                setState(() {
+                  widget.isLoginCheck();
+                });
+              },
+              child: Text(widget.isLogin
+                  ? "Dont have account? Register"
+                  : "Have an account? Login"),
             ),
           )
         ]),

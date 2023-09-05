@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class HeaderLogin extends StatelessWidget {
-  HeaderLogin({super.key});
+  HeaderLogin({super.key, required this.isLogin});
+
+  bool isLogin;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,9 @@ class HeaderLogin extends StatelessWidget {
               .copyWith(color: Colors.white),
         ),
         Text(
-          "Please enter your account bellow",
+          isLogin
+              ? "Please enter your account bellow"
+              : "Please ensure to enter the correct data",
           style: Theme.of(context)
               .textTheme
               .bodyLarge!

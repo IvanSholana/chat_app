@@ -2,8 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:chat_app/screens/login_screen/widget/login_form.dart';
 import 'package:chat_app/screens/login_screen/widget/header_login.dart';
 
-class LoginScreen extends StatelessWidget {
-  LoginScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool _isLogin = true;
+
+  void cekLogin() {
+    setState(() {
+      _isLogin = !_isLogin;
+    });
+    print(_isLogin);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
@@ -20,12 +36,15 @@ class LoginScreen extends StatelessWidget {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(20),
-                  child: HeaderLogin(),
+                  child: HeaderLogin(isLogin: _isLogin),
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 5,
                 ),
-                LoginForm()
+                LoginForm(
+                  isLogin: _isLogin,
+                  isLoginCheck: cekLogin,
+                )
               ],
             ),
           )),
