@@ -5,6 +5,7 @@ import 'package:chat_app/screens/login_screen/main_login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:chat_app/screens/home_screen/main_home.dart';
+import 'package:chat_app/screens/login_screen/widget/add_profile.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,7 +42,7 @@ class App extends StatelessWidget {
             return HomeScreen();
           }
 
-          return const LoginScreen();
+          return AddProfile();
         },
       ),
     );

@@ -140,11 +140,13 @@ class _LoginFormState extends State<LoginForm> {
                   colors: [Colors.purple, Colors.blueAccent],
                 ),
               ),
-              child: Text(widget.isLogin ? "Login" : "Sign Up",
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge!
-                      .copyWith(color: Colors.white)),
+              child: Text(
+                widget.isLogin ? "Login" : "Sign Up",
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyLarge!
+                    .copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
           const SizedBox(
