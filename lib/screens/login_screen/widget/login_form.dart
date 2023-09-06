@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chat_app/screens/login_screen/widget/add_profile.dart';
 
 class LoginForm extends StatefulWidget {
   LoginForm({super.key, required this.isLoginCheck, required this.isLogin});
@@ -27,14 +30,16 @@ class _LoginFormState extends State<LoginForm> {
           final UserCredential = await authFirebase.signInWithEmailAndPassword(
               email: _email, password: _password);
         } else {
-          final userCredential =
-              await authFirebase.createUserWithEmailAndPassword(
-                  email: _email, password: _password);
+          final dataUser = await Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => AddProfile(email: _email),
+          ));
+          if (dataUser != null) {
+            final userCredential =
+                await authFirebase.createUserWithEmailAndPassword(
+                    email: _email, password: _password);
+          }
         }
       } on FirebaseAuthException catch (error) {
-        if (error.code == 'email-already-in-use') {
-          //..
-        }
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

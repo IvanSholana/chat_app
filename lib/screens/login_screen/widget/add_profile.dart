@@ -4,7 +4,8 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 
 class AddProfile extends StatefulWidget {
-  const AddProfile({super.key});
+  AddProfile({super.key, required this.email});
+  String email;
 
   @override
   State<AddProfile> createState() => _AddProfileState();
@@ -113,7 +114,7 @@ class _AddProfileState extends State<AddProfile> {
                 child: Column(
                   children: [
                     TextFormField(
-                      initialValue: "ivan@gmail.com",
+                      initialValue: widget.email,
                       enabled: false,
                       decoration: const InputDecoration(
                         filled: true,

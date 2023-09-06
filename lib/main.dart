@@ -42,7 +42,7 @@ class App extends StatelessWidget {
             return HomeScreen();
           }
 
-          return AddProfile();
+          return LoginScreen();
         },
       ),
     );
