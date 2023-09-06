@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/screens/login_screen/widget/add_profile.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class LoginForm extends StatefulWidget {
   LoginForm({super.key, required this.isLoginCheck, required this.isLogin});
@@ -30,13 +31,26 @@ class _LoginFormState extends State<LoginForm> {
           final UserCredential = await authFirebase.signInWithEmailAndPassword(
               email: _email, password: _password);
         } else {
-          final dataUser = await Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => AddProfile(email: _email),
-          ));
+          final dataUser =
+              await Navigator.of(context).push<Map<String, dynamic>>(
+            MaterialPageRoute(
+              builder: (context) => AddProfile(email: _email),
+            ),
+          );
+          print(dataUser);
           if (dataUser != null) {
             final userCredential =
                 await authFirebase.createUserWithEmailAndPassword(
                     email: _email, password: _password);
+
+            final storageRef = FirebaseStorage.instance
+                .ref()
+                .child('user_images')
+                .child('${userCredential.user!.uid}.jpg');
+
+            await storageRef.putFile(dataUser['pickedImage']);
+            final imageUrl = await storageRef.getDownloadURL();
+            print(imageUrl);
           }
         }
       } on FirebaseAuthException catch (error) {
@@ -98,7 +112,7 @@ class _LoginFormState extends State<LoginForm> {
             validator: (value) {
               if (value == null ||
                   value.trim().isEmpty ||
-                  value.trim().length <= 10) {
+                  value.trim().length < 10) {
                 return 'Password must be at least 10 characters long!';
               }
               return null;

@@ -41,6 +41,8 @@ dependencies:
   firebase_core_dart: ^1.0.1
   intl: ^0.18.1
   image_picker: ^1.0.4
+  firebase_storage: ^11.2.6
+  cloud_firestore: ^4.9.1
 
 dev_dependencies:
   flutter_test:

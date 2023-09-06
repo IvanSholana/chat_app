@@ -12,10 +12,13 @@ class AddProfile extends StatefulWidget {
 }
 
 class _AddProfileState extends State<AddProfile> {
-  String _gender = "";
   TextEditingController _dateController = TextEditingController();
   DateTime selectedDate = DateTime.now();
+  String _gender = "";
   File? pickedImage;
+  String firstName = "";
+  String lastName = "";
+  String phoneNumber = "";
   Future<void> _selectDate() async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -38,6 +41,23 @@ class _AddProfileState extends State<AddProfile> {
       setState(() {
         pickedImage = File(imagePick.path);
       });
+    }
+  }
+
+  final _formKey = GlobalKey<FormState>();
+
+  void _sumbitData() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      Navigator.of(context).pop({
+        "firstName": firstName,
+        "lastName": lastName,
+        "gender": _gender,
+        "dateBirth": _dateController.text,
+        "pickedImage": pickedImage
+      });
+    } else {
+      return;
     }
   }
 
@@ -111,6 +131,7 @@ class _AddProfileState extends State<AddProfile> {
             Container(
               padding: const EdgeInsets.all(25),
               child: Form(
+                key: _formKey,
                 child: Column(
                   children: [
                     TextFormField(
@@ -125,6 +146,16 @@ class _AddProfileState extends State<AddProfile> {
                       children: [
                         Expanded(
                           child: TextFormField(
+                            validator: (value) {
+                              if (value?.trim().length == 0 ||
+                                  value!.isEmpty ||
+                                  value == null) {
+                                return "Invalid name";
+                              }
+                            },
+                            onSaved: (newValue) {
+                              firstName = newValue!;
+                            },
                             decoration: const InputDecoration(
                                 filled: true, labelText: "First Name"),
                           ),
@@ -132,6 +163,14 @@ class _AddProfileState extends State<AddProfile> {
                         const SizedBox(width: 10),
                         Expanded(
                           child: TextFormField(
+                            validator: (value) {
+                              if (value?.trim().length == 0 ||
+                                  value!.isEmpty ||
+                                  value == null) {
+                                return "Invalid name";
+                              }
+                            },
+                            onSaved: (newValue) => lastName = newValue!,
                             decoration: const InputDecoration(
                                 filled: true, labelText: "Last Name"),
                           ),
@@ -140,6 +179,12 @@ class _AddProfileState extends State<AddProfile> {
                     ),
                     const SizedBox(height: 20),
                     TextFormField(
+                      validator: (value) {
+                        if (value == null || value!.trim().length <= 10) {
+                          return "Phone number is invalid";
+                        }
+                      },
+                      onSaved: (newValue) => phoneNumber = newValue!,
                       keyboardType: TextInputType.phone,
                       decoration: const InputDecoration(
                           filled: true, labelText: "Phone Number"),
@@ -184,6 +229,7 @@ class _AddProfileState extends State<AddProfile> {
               ),
             ),
             InkWell(
+              onTap: () => _sumbitData(),
               child: Container(
                 margin: const EdgeInsets.all(20),
                 height: 50,
@@ -192,12 +238,12 @@ class _AddProfileState extends State<AddProfile> {
                     borderRadius: BorderRadius.all(Radius.circular(15)),
                     gradient: LinearGradient(
                         colors: [Colors.purple, Colors.blueAccent])),
+                width: double.infinity,
                 child: Text(
                   "Submit Data",
                   style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: Colors.white, fontWeight: FontWeight.bold),
                 ),
-                width: double.infinity,
               ),
             )
           ],
