@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessageBar extends StatefulWidget {
   @override
@@ -6,7 +8,7 @@ class MessageBar extends StatefulWidget {
 }
 
 class _MessageBarState extends State<MessageBar> {
-  var _inputMassage = TextEditingController();
+  final _inputMassage = TextEditingController();
 
   @override
   void dispose() {
@@ -14,13 +16,26 @@ class _MessageBarState extends State<MessageBar> {
     super.dispose();
   }
 
-  void sendMassage(String value) {
+  void sendMassage(String value) async {
     if (value.trim().isEmpty) {
       return;
     }
-
-    // Send a Message
+    final message = _inputMassage.text;
+    FocusScope.of(context).unfocus();
     _inputMassage.clear();
+    final user = FirebaseAuth.instance.currentUser!;
+    final userData = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+    await FirebaseFirestore.instance.collection('chat').add({
+      "text": message,
+      "createdAt": Timestamp.now(),
+      'userID': user.uid,
+      'username':
+          '${userData.data()!['firstName']} ${userData.data()!['lastName']}',
+      'image_url': userData.data()!['image_url']
+    });
   }
 
   Widget build(BuildContext context) {
@@ -38,7 +53,11 @@ class _MessageBarState extends State<MessageBar> {
                 fillColor: Colors.white),
           ),
         ),
-        IconButton(onPressed: () {}, icon: const Icon(Icons.send))
+        IconButton(
+            onPressed: () {
+              sendMassage(_inputMassage.text);
+            },
+            icon: const Icon(Icons.send))
       ],
     );
   }

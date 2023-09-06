@@ -43,7 +43,7 @@ class App extends StatelessWidget {
             return HomeScreen();
           }
 
-          return LoginScreen();
+          return const LoginScreen();
         },
       ),
     );
