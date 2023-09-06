@@ -24,7 +24,7 @@ class MessageSection extends StatelessWidget {
               ? Padding(
                   padding: const EdgeInsets.only(left: 5),
                   child: CircleAvatar(
-                    backgroundImage: FileImage(File(data['image_url'])),
+                    backgroundImage: NetworkImage(data['image_url']),
                   ))
               : const SizedBox(),
           Expanded(
@@ -96,9 +96,11 @@ class MessageSection extends StatelessWidget {
             ),
           ),
           aktor == "1" && status == "baru"
-              ? const Padding(
+              ? Padding(
                   padding: EdgeInsets.only(right: 5),
-                  child: CircleAvatar(),
+                  child: CircleAvatar(
+                    backgroundImage: NetworkImage(data['image_url']),
+                  ),
                 )
               : const SizedBox()
         ],
