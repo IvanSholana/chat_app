@@ -14,7 +14,7 @@ class AddProfile extends StatefulWidget {
 class _AddProfileState extends State<AddProfile> {
   TextEditingController _dateController = TextEditingController();
   DateTime selectedDate = DateTime.now();
-  String _gender = "";
+  String _gender = "Male";
   File? pickedImage;
   String firstName = "";
   String lastName = "";
@@ -148,7 +148,7 @@ class _AddProfileState extends State<AddProfile> {
                         Expanded(
                           child: TextFormField(
                             validator: (value) {
-                              if (value?.trim().length == 0 ||
+                              if (value!.trim().isEmpty ||
                                   value!.isEmpty ||
                                   value == null) {
                                 return "Invalid name";

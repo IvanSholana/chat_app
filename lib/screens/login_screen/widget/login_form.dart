@@ -57,7 +57,7 @@ class _LoginFormState extends State<LoginForm> {
                 .doc(userCredential.user!.uid)
                 .set({
               'firstName': dataUser['firstName'],
-              'lastName': dataUser['lalstName'],
+              'lastName': dataUser['lastName'],
               'phoneNumber': dataUser['phoneNumber'],
               "gender": dataUser['gender'],
               "dateBirth": dataUser['dateBirth'],
