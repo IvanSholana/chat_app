@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chat_app/screens/login_screen/widget/add_profile.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginForm extends StatefulWidget {
   LoginForm({super.key, required this.isLoginCheck, required this.isLogin});
@@ -37,7 +38,7 @@ class _LoginFormState extends State<LoginForm> {
               builder: (context) => AddProfile(email: _email),
             ),
           );
-          print(dataUser);
+
           if (dataUser != null) {
             final userCredential =
                 await authFirebase.createUserWithEmailAndPassword(
@@ -50,14 +51,26 @@ class _LoginFormState extends State<LoginForm> {
 
             await storageRef.putFile(dataUser['pickedImage']);
             final imageUrl = await storageRef.getDownloadURL();
-            print(imageUrl);
+
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(userCredential.user!.uid)
+                .set({
+              'firstName': dataUser['firstName'],
+              'lastName': dataUser['lalstName'],
+              'phoneNumber': dataUser['phoneNumber'],
+              "gender": dataUser['gender'],
+              "dateBirth": dataUser['dateBirth'],
+              "email": _email,
+              "image_url": imageUrl
+            });
           }
         }
       } on FirebaseAuthException catch (error) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(error.code ?? 'Authentication Failed'),
+            content: Text(error.code),
           ),
         );
       }

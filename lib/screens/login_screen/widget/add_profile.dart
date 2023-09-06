@@ -53,6 +53,7 @@ class _AddProfileState extends State<AddProfile> {
         "firstName": firstName,
         "lastName": lastName,
         "gender": _gender,
+        "phoneNumber": phoneNumber,
         "dateBirth": _dateController.text,
         "pickedImage": pickedImage
       });
